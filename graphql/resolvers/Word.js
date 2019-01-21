@@ -24,6 +24,11 @@ export default {
     addWord: async (root, {id , value, userId}) => {
       const chain = await WordChain.findById(id);
       const user = await User.findById(userId);
+      const lastLetter = chain.lastLetter;
+      if (lastLetter !== '' && lastLetter !== value[0]){
+        throw new Error("The word is invalid.");
+      }
+      chain.lastLetter = value[value.length-1];
       chain.lastIndex++;
       const word = new Word({
         wordChain: id, 

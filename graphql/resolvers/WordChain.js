@@ -10,7 +10,6 @@ export default {
   },
   Query: {
     wordChains: async () => {
-      console.log(await WordChain.find({}).populate().exec());
       return await WordChain.find({}).populate().exec();
     },
     wordChain: async (root, {id}) => {
