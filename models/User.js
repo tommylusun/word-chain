@@ -11,7 +11,11 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true
-  }
+  },
+  words: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Word'
+  }]
 });
 
 const User = mongoose.model("User", UserSchema);

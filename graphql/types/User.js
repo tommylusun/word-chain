@@ -3,6 +3,7 @@ export default `
     _id: ID
     name: String!
     email: String!
+    words: [Word]
   }
   type Query {
     user(_id: ID, name: String): User

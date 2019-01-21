@@ -1,7 +1,13 @@
 // The User schema.
 import User from "../../models/User";
+import Word from "../../models/Word";
 
 export default {
+  User: {
+    words: async (root) => {
+      return await Word.find({user: root._id}).populate().exec();
+    }
+  },
   Query: {
     user: async (root, args) => {
       return await User.findOne(args).exec();
