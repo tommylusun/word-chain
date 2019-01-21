@@ -1,4 +1,6 @@
-export default `
+import { gql } from "apollo-server-express";
+
+export default gql`
   type Word {
     _id: ID
     sequence: Int!
