@@ -1,11 +1,9 @@
 import express from "express";
-import expressGraphQL from "express-graphql";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { makeExecutableSchema } from "graphql-tools";
 import dotenv from 'dotenv';
-import { ApolloServer, gql } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 
 import typeDefs from "./graphql/typeDefs";
 import resolvers from "./graphql/resolver";
