@@ -69,11 +69,12 @@ export default {
       subscribe: withFilter(
         () => pubsub.asyncIterator('WORD_ADDED'),
         (payload, variables) => {
-          console.log( payload);
-          console.log( variables);
+
+          if (payload.wordAdded.wordChain.toString() === variables.wordChainId){
+          }
           return payload.wordAdded.wordChain.toString() === variables.wordChainId;
         },
-      ),
+      )
     }
   }
 };

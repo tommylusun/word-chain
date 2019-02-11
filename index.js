@@ -32,7 +32,8 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     subscriptions: {
-        onConnect: () => console.log('Connected to websocket'),
+        onConnect: () => console.log("Connected"),
+        onDisconnect: () => console.log('Disconnected Socket')
     },
     tracing: true,
 });

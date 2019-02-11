@@ -26,23 +26,21 @@ subscription WordAdded($chainId: String!){
 `;
 class WordChainRoom extends Component {
 
-
+    componentDidMount() {
+        console.log(this.props);
+    }
     render() {
-        return (<Query query={GET_WORDCHAIN} variables={{ id: this.props.chainId }}>
+        return (<Query query={GET_WORDCHAIN} variables={{ id: this.props.match.params.chainId }}>
             {({ loading, error, data, subscribeToMore }) => {
                 if (loading) return "Loading...";
                 if (error) return `Error! ${error.message}`;
                 const chain = data.wordChain;
                 return (
                     <div>
-                        <div>{chain._id}</div>
                         <div>Last letter: {chain.lastLetter}</div>
-                        {chain.words.map((word) => (
-                            <li>{word.value}</li>
-                        ))}
-                        <WordList words={chain.words} subscribeToMore={subscribeToMore}></WordList>
+                        <WordList chain={chain} subscribeToMore={subscribeToMore}></WordList>
                         <div>
-                            <AddWord chainId="5c45251dd3a4aef95e136f32" userId="5c45250ed3a4aef95e136f31"></AddWord>
+                            <AddWord chainId={this.props.match.params.chainId} userId="5c45250ed3a4aef95e136f31"></AddWord>
                         </div>
                     </div>
                 );
@@ -56,7 +54,7 @@ class WordList extends Component {
     componentDidMount() {
         this.props.subscribeToMore({
             document: WORD_ADDED,
-            variables: { chainId: "5c45251dd3a4aef95e136f32" },
+            variables: { chainId: this.props.chain._id },
             updateQuery: (prev, { subscriptionData }) => {
                 console.log(subscriptionData);
                 if (!subscriptionData.data) return prev;
@@ -73,7 +71,7 @@ class WordList extends Component {
     render() {
         return (
             <div>
-                {this.props.words.map((word) => (
+                {this.props.chain.words.map((word) => (
                     <li>{word.value}</li>
                 ))}
             </div>
