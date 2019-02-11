@@ -3,8 +3,6 @@ import wordChaingql from '../../GraphQL/wordChain'
 import { Link } from 'react-router-dom';
 
 import { Query } from "react-apollo";
-import AddWord from "./AddWord";
-import Room from "../WordChainRoom/WordChainRoom";
 const Main = () => (
     <div>
         <Query query={wordChaingql}>
@@ -16,7 +14,7 @@ const Main = () => (
                     <div>
                         {data.wordChains.map(chain => {
                             return (
-                                <Link to={"/chain/"+chain._id}><h3>{chain._id}</h3></Link>
+                                <Link to={"/chain/"+chain._id}><h3>{new Date(+chain.date).toDateString()}</h3></Link>
                             );
                         }
                         )}

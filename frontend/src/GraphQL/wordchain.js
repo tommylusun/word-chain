@@ -7,9 +7,7 @@ query{
       _id
       lastLetter
       lastIndex
-      words{
-        value
-      }
+      date
     }
   }
 `;
