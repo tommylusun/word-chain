@@ -7,6 +7,8 @@ import { ApolloServer } from "apollo-server-express";
 
 import typeDefs from "./graphql/typeDefs";
 import resolvers from "./graphql/resolver";
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { createServer } from 'http';
 
 dotenv.config();
 const app = express();
@@ -26,11 +28,21 @@ mongoose
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log(err));
 
-const server = new ApolloServer({ 
-    typeDefs, 
-    resolvers
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    subscriptions: {
+        onConnect: () => console.log('Connected to websocket'),
+    },
+    tracing: true,
 });
 
 server.applyMiddleware({ app });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const httpServer = createServer(app);
+server.installSubscriptionHandlers(httpServer);
+
+httpServer.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`)
+});

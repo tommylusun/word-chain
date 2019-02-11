@@ -9,7 +9,7 @@ export default gql`
     date: String!
   }
   type Query {
-    wordChain(id: ID): WordChain
+    wordChain(id: String): WordChain
     wordChains: [WordChain]
   }
   type Mutation {

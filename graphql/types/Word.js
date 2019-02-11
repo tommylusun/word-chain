@@ -13,6 +13,9 @@ export default gql`
     words(id: ID, chainId: ID): [Word]
   }
   type Mutation {
-    addWord(id: ID!, value: String!, userId: ID!): Word
+    addWord(id: ID!, value: String!, userId: ID!): WordChain
+  }
+  type Subscription {
+    wordAdded(wordChainId: String!): Word
   }
 `;

@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import Main from '../Main/Main';
+// import WordChainRoom from '../WordChainRoom/WordChainRoom'
 
 const AppRouter = () => (
     <BrowserRouter>
@@ -20,6 +21,7 @@ const AppRouter = () => (
             </nav>
             <Switch>
                 <Route path="/" exact component={Main} />
+                {/* <Route path="/:chainID" exact component={WordChainRoom} /> */}
             </Switch>
         </div>
     </BrowserRouter>
