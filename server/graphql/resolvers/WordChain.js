@@ -1,7 +1,6 @@
 // The User schema.
 import WordChain from "../../models/WordChain";
 import Word from "../../models/Word"
-import validateWord from "../../scripts/validateWord";
 
 export default {
   WordChain: {

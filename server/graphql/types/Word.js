@@ -7,6 +7,7 @@ export default gql`
     value: String!
     user: User!
     wordChain: WordChain!
+    points: Int!
   }
   type Query {
     word(_id: ID, sequence: Int, value: String): Word

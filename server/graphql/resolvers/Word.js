@@ -4,7 +4,7 @@ import WordChain from "../../models/WordChain";
 import User from "../../models/User";
 import validateWord from "../../scripts/validateWord";
 import { PubSub, withFilter } from 'apollo-server-express';
-
+import calculatePoints from '../../scripts/scoreCalculator';
 const pubsub = new PubSub();
 
 const WORD_ADDED = 'WORD_ADDED';
@@ -34,10 +34,6 @@ export default {
       const user = await User.findById(userId);
       const lastLetter = chain.lastLetter;
 
-      if (lastLetter !== '' && lastLetter !== value[0]) {
-        throw new Error("Invalid: The first letter does not match the previous word's last letter");
-      }
-
       const valid = await validateWord(value, chain);
       if (valid === -2) {
         throw new Error("Invalid: Not a real word!");
@@ -48,11 +44,13 @@ export default {
 
       chain.lastLetter = value[value.length - 1];
       chain.lastIndex++;
+      const points = calculatePoints(value,chain);
       const word = new Word({
         wordChain: id,
         value: value,
         user: userId,
-        sequence: chain.lastIndex
+        sequence: chain.lastIndex,
+        points: points
       });
       const savedWord = await word.save();
       await chain.words.push(savedWord._id);

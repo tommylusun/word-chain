@@ -3,17 +3,18 @@ import { gql } from "apollo-server-express";
 export default gql`
   type User {
     _id: ID
-    name: String!
+    username: String!
     email: String!
     words: [Word]
   }
   type Query {
-    user(_id: ID, name: String): User
+    user(_id: ID, username: String, email: String): User
     users: [User]
   }
   type Mutation {
-    addUser( name: String!, email: String!): User
-    editUser(_id: ID!, name: String, email: String): User
-    deleteUser(_id: ID!, name: String, email: String): User
+    registerUser( username: String!, email: String!, password: String!): String
+    loginUser( email: String!, password: String!): String
+    editUser(_id: ID!, username: String, email: String): User
+    deleteUser(_id: ID!, username: String, email: String): User
   }
 `;

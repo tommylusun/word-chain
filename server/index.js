@@ -9,6 +9,7 @@ import typeDefs from "./graphql/typeDefs";
 import resolvers from "./graphql/resolver";
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { createServer } from 'http';
+const jwt = require('express-jwt')
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,12 @@ const db = process.env.MONGO_DB_URI;
 app.use(cors());
 app.use(bodyParser.json());
 
+// auth middleware
+const auth = jwt({
+    secret: process.env.JWT_SECRET,
+    credentialsRequired: false
+});
+app.use(auth);
 // Connect to MongoDB with Mongoose.
 mongoose
     .connect(
@@ -35,7 +42,10 @@ const server = new ApolloServer({
         onConnect: () => console.log("Connected"),
         onDisconnect: () => console.log('Disconnected Socket')
     },
-    tracing: true,
+    context: ({ req }) => {
+        // get the user token from the headers
+        return {user: req.user};
+      }
 });
 
 server.applyMiddleware({ app });

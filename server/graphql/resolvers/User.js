@@ -1,6 +1,10 @@
 // The User schema.
 import User from "../../models/User";
 import Word from "../../models/Word";
+import bcrypt from 'bcrypt';
+import jsonwebtoken from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default {
   User: {
@@ -17,9 +21,36 @@ export default {
     }
   },
   Mutation: {
-    addUser: async (root, { name, email }) => {
-      const newUser = new User({ name, email });
-      return await newUser.save();
+    registerUser: async (root, { username, email, password }) => {
+      const newUser = new User({ 
+        username, 
+        email, 
+        password: await bcrypt.hash(password, 10)
+      });
+      const user = await newUser.save();
+
+      // return json web token
+      return jsonwebtoken.sign(
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '1y' }
+      );
+    },
+    loginUser: async (root, {email, password}) => {
+      const user = await User.findOne({email}).populate().exec();
+      if (!user) {
+        throw new Error('No user with that email')
+      }
+      const valid = await bcrypt.compare(password, user.password);
+
+      if (!valid) {
+        throw new Error('Incorrect password')
+      }
+      return jsonwebtoken.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '1y' }
+      );
     },
     editUser: async (root, { id, name, email }) => {
       return await User.findOneAndUpdate({ id }, { $set: { name, email } }).exec();

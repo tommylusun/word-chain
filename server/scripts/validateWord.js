@@ -17,6 +17,11 @@ const validateWord = async (word, chain) => {
 
 const validateChainRules = async (word, chain) => {
 
+
+    if (chain.lastLetter !== '' && chain.lastLetter !== word[0]) {
+        return -1;
+    }
+
     // Rule 1: More than 2 letters in length
     if (word.length < 3) {
         return -1;

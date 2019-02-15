@@ -20,6 +20,10 @@ export const WordSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'WordChain'
   },
+  points: {
+    type: Number,
+    required: true
+  }
 });
 
 const Word = mongoose.model("Word", WordSchema);
