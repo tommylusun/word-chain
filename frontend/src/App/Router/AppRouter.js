@@ -1,24 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import Main from '../Main/Main';
+import Login from '../Login/Login';
 import WordChainRoom from '../WordChainRoom/WordChainRoom'
 
-const AppRouter = () => (
-    <BrowserRouter>
+const AppRouter = () => {
+    // Declare a new state variable, which we'll call "count"
+
+    return (<BrowserRouter>
         <div>
+        <Link to="/login">Login / Register</Link>
             <nav>
-                <ul>
-                    <li>
                         <Link to="/">Home</Link>
-                    </li>
-                </ul>
             </nav>
             <Switch>
                 <Route path="/" exact component={Main} />
-                <Route path="/chain/:chainId" exact component={props => (<WordChainRoom {...props}/>)} />
+                <Route path="/login" exact component={Login} />
+                <Route path="/chain/:chainId" exact component={props => (<WordChainRoom {...props} />)} />
             </Switch>
         </div>
-    </BrowserRouter>
-);
+    </BrowserRouter>);
+};
 
 export default AppRouter;

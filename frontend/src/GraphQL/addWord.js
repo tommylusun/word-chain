@@ -1,11 +1,9 @@
 import gql from "graphql-tag";
 
 const ADD_WORD = gql`
-  mutation addWord($chainId: ID!, $value: String!, $userId: ID!) {
-    addWord(id: $chainId, value: $value, userId: $userId) {
-      _id
+  mutation addWord($chainId: ID!, $value: String!) {
+    addWord(id: $chainId, value: $value) {
       words {
-          _id
           value
       }
     }

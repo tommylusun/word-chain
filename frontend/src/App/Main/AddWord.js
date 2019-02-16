@@ -16,7 +16,7 @@ const AddWord = (props) => {
                         <form
                             onSubmit={e => {
                                 e.preventDefault();
-                                addWord({ variables: { chainId: props.chainId, value: input.value, userId: props.userId } });
+                                addWord({ variables: { chainId: props.chainId, value: input.value } });
                                 input.value = "";
                             }}
                         >

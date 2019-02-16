@@ -39,12 +39,19 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     subscriptions: {
-        onConnect: () => console.log("Connected"),
+        onConnect: (connectionParams,webSocket,context) => {
+            // console.log(webSocket)
+            // return { user: ''};
+        },
         onDisconnect: () => console.log('Disconnected Socket')
     },
-    context: ({ req }) => {
+    context: ({ req, connection}) => {
+        console.log(connection);
+        if (connection){
+            return;
+        }
         // get the user token from the headers
-        return {user: req.user};
+        return req.user ? {user: req.user} : {user: ''};
       }
 });
 

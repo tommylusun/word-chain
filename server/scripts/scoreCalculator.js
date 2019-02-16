@@ -2,10 +2,10 @@
 
 const FIRST_LETTERS = {
     'tais': 100,
-    'owhbcm': 125,
-    'mfpdrl': 150,
-    'egnyuk':200,
-    'vjqxz':400
+    'owhbcm': 110,
+    'mfpdrl': 120,
+    'egnyuk':140,
+    'vjqxz':200
 };
 
 const calculatePoints = async (word, chain) => {
@@ -14,8 +14,7 @@ const calculatePoints = async (word, chain) => {
     let chainLength = chain.words.length;
     let firstLetter = word[0];
     let multiplier = 1;
-
-    for (key in Object.keys(FIRST_LETTERS)){
+    for (let key of Object.keys(FIRST_LETTERS)){
         if (key.includes(firstLetter)){
             points = FIRST_LETTERS[key];
             break;

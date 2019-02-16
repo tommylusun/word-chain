@@ -28,10 +28,14 @@ export default {
     },
   },
   Mutation: {
-    addWord: async (root, { id, value, userId }) => {
+    addWord: async (root, { id, value },{user}) => {
+      // make sure user is logged in
+      if (!user) {
+        throw new Error('You are not logged in!')
+      }
       value = value.trim().toLowerCase();
       const chain = await WordChain.findById(id).populate('words').exec();
-      const user = await User.findById(userId);
+      const currentUser = await User.findById(user.id);
       const lastLetter = chain.lastLetter;
 
       const valid = await validateWord(value, chain);
@@ -44,19 +48,19 @@ export default {
 
       chain.lastLetter = value[value.length - 1];
       chain.lastIndex++;
-      const points = calculatePoints(value,chain);
+      const points = await calculatePoints(value,chain);
       const word = new Word({
         wordChain: id,
         value: value,
-        user: userId,
+        user: user.id,
         sequence: chain.lastIndex,
         points: points
       });
       const savedWord = await word.save();
       await chain.words.push(savedWord._id);
-      await user.words.push(savedWord._id);
+      await currentUser.words.push(savedWord._id);
       await chain.save();
-      await user.save();
+      await currentUser.save();
       console.log(savedWord);
       await pubsub.publish(WORD_ADDED, { wordAdded: savedWord });
       return chain;
