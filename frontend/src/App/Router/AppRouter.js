@@ -1,17 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import Main from '../Main/Main';
 import Login from '../Login/Login';
 import WordChainRoom from '../WordChainRoom/WordChainRoom'
 
-const AppRouter = () => {
+const AppRouter = (props) => {
     // Declare a new state variable, which we'll call "count"
+    const [auth, setLoggedIn] = useState(!!localStorage.getItem('token'));
+
+    useEffect(() => {
+        window.addEventListener('storage', e => setLoggedIn(!!localStorage.getItem('token')));
+
+        return () => {
+            window.removeEventListener('storage', e => setLoggedIn(!!localStorage.getItem('token')));
+        };
+    });
 
     return (<BrowserRouter>
         <div>
-        <Link to="/login">Login / Register</Link>
+            {!auth ?
+                <Link to="/login"><button>Login / Register</button></Link> :
+
+                (<div>
+                    <button onClick={() => {
+                        localStorage.removeItem('token');
+                        setLoggedIn(false);
+                    }}>Logout</button>
+                </div>
+                )
+            }
             <nav>
-                        <Link to="/">Home</Link>
+                <Link to="/">Home</Link>
             </nav>
             <Switch>
                 <Route path="/" exact component={Main} />

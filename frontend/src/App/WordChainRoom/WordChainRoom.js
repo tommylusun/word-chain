@@ -28,7 +28,6 @@ subscription WordAdded($chainId: String!){
         value
         points
         user{
-            _id
             username
             email
         }

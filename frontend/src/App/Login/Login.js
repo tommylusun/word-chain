@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import { withRouter} from 'react-router-dom';
 
 const LOGIN = gql`
   mutation loginUser($email: String!, $password: String!) {
@@ -22,7 +23,6 @@ class Login extends Component {
         password: '',
     };
     componentDidMount() {
-        console.log(this.props);
     }
 
     async handleChange(event) {
@@ -33,7 +33,6 @@ class Login extends Component {
         await this.setState({
             [name]: value
         });
-        console.log(this.state);
     }
 
     async handleSubmit(event, mutationCall) {
@@ -57,8 +56,8 @@ class Login extends Component {
             });
             localStorage.setItem('token',token.data.registerUser);
         }
-        
-
+        window.dispatchEvent( new Event('storage') );
+        this.props.history.push('/');
     }
 
     render() {
@@ -103,4 +102,4 @@ class Login extends Component {
         );
     }
 };
-export default Login;
+export default withRouter(Login);
