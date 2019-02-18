@@ -37,7 +37,6 @@ subscription WordAdded($chainId: String!){
 class WordChainRoom extends Component {
     state = { loggedIn: false };
     componentDidMount() {
-        console.log(this.props);
         this.messagesEnd.scrollIntoView({ behavior: "smooth" });
         const token = localStorage.getItem('token');
         if (token) {
@@ -51,7 +50,6 @@ class WordChainRoom extends Component {
                     {({ loading, error, data, subscribeToMore }) => {
                         if (loading) return "Loading...";
                         if (error) return `Error! ${error.message}`;
-                        console.log(data);
                         const chain = data.wordChain;
                         const date = new Date(+data.wordChain.date);
                         return (
@@ -80,8 +78,6 @@ class WordList extends Component {
             document: WORD_ADDED,
             variables: { chainId: this.props.chain._id },
             updateQuery: (prev, { subscriptionData }) => {
-                console.log(prev);
-                console.log(subscriptionData);
                 if (!subscriptionData.data) return prev.wordChain;
 
                 return Object.assign({}, prev.wordChain, {

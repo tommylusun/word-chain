@@ -28,42 +28,13 @@ export default {
     },
   },
   Mutation: {
-    addWord: async (root, { id, value },{user}) => {
+    addWord: async (root, { chainId, value }, { user }) => {
       // make sure user is logged in
       if (!user) {
         throw new Error('You are not logged in!')
       }
       value = value.trim().toLowerCase();
-      const chain = await WordChain.findById(id).populate('words').exec();
-      const currentUser = await User.findById(user.id);
-      const lastLetter = chain.lastLetter;
-
-      const valid = await validateWord(value, chain);
-      if (valid === -2) {
-        throw new Error("Invalid: Not a real word!");
-      }
-      else if (valid === -1) {
-        throw new Error("Invalid: You broke the rules!")
-      }
-
-      chain.lastLetter = value[value.length - 1];
-      chain.lastIndex++;
-      const points = await calculatePoints(value,chain);
-      const word = new Word({
-        wordChain: id,
-        value: value,
-        user: user.id,
-        sequence: chain.lastIndex,
-        points: points
-      });
-      const savedWord = await word.save();
-      await chain.words.push(savedWord._id);
-      await currentUser.words.push(savedWord._id);
-      await chain.save();
-      await currentUser.save();
-      console.log(savedWord);
-      await pubsub.publish(WORD_ADDED, { wordAdded: savedWord });
-      return chain;
+      return await validateAndSaveWord(chainId, value, user);
     }
   },
   Subscription: {
@@ -72,11 +43,48 @@ export default {
         () => pubsub.asyncIterator('WORD_ADDED'),
         (payload, variables) => {
 
-          if (payload.wordAdded.wordChain.toString() === variables.wordChainId){
+          if (payload.wordAdded.wordChain.toString() === variables.wordChainId) {
           }
           return payload.wordAdded.wordChain.toString() === variables.wordChainId;
         },
       )
     }
   }
+};
+
+const validateAndSaveWord = async (chainId, value, user) => {
+  const chain = await WordChain.findById(chainId).populate('words').exec();
+
+  const valid = await validateWord(value, chain);
+  if (valid === -2) {
+    throw new Error("Invalid: Not a real word!");
+  }
+  else if (valid === -1) {
+    throw new Error("Invalid: You broke the rules!")
+  }
+
+  chain.lastLetter = value[value.length - 1];
+  chain.lastIndex++;
+  const points = await calculatePoints(value, chain);
+  const word = new Word({
+    wordChain: chainId,
+    value: value,
+    user: user.id,
+    sequence: chain.lastIndex,
+    points: points
+  });
+  // Try to fix concurrency issue by checking __v property
+  const newChain = await WordChain.findOneAndUpdate({ __v: chain.__v, _id: chainId }, { lastLetter: chain.lastLetter, __v: chain.__v + 1 });
+  if (!newChain) {
+    throw new Error("Too slow! Someone else got it!");
+  }
+
+  const currentUser = await User.findById(user.id);
+  const savedWord = await word.save();
+  await chain.words.push(savedWord._id);
+  await currentUser.words.push(savedWord._id);
+  await chain.save();
+  await currentUser.save();
+  await pubsub.publish(WORD_ADDED, { wordAdded: savedWord });
+  return chain;
 };

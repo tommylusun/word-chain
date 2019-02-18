@@ -4,8 +4,8 @@ const FIRST_LETTERS = {
     'tais': 100,
     'owhbcm': 110,
     'mfpdrl': 120,
-    'egnyuk':140,
-    'vjqxz':200
+    'egnuk':140,
+    'yvjqxz':200
 };
 
 const calculatePoints = async (word, chain) => {
@@ -20,8 +20,20 @@ const calculatePoints = async (word, chain) => {
             break;
         }
     }
+    if (chainLength > 100) {
+        multiplier = 1.1;
+    }
+    if (chainLength > 200) {
+        multiplier = 1.2;
+    }
+    if (chainLength > 500) {
+        multiplier = 1.5;
+    }
+    if (chainLength > 1000) {
+        multiplier = 2;
+    }
 
-    return points;
+    return points*multiplier;
 };
 
 export default calculatePoints;    

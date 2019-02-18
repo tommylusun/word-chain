@@ -18,9 +18,8 @@ require('dotenv').config();
 const httpLink = new HttpLink({
   uri: `/graphql`,
 });
-console.log(window.location.href.replace('http','ws'));
 const wsLink = new WebSocketLink({
-  uri: window.location.href.replace('http','ws')+ 'graphql',
+  uri: window.location.origin.replace('http','ws')+ '/graphql',
   options: {
     reconnect: true
   }
