@@ -1,11 +1,24 @@
 import React from 'react'
-import wordChaingql from '../../GraphQL/wordChain'
+// import wordChaingql from '../../GraphQL/wordChain'
 import { Link } from 'react-router-dom';
+import gql from "graphql-tag";
 
 import { Query } from "react-apollo";
+
+const GET_WORD_CHAINS = gql`
+
+query{
+    wordChains{
+      _id
+      lastLetter
+      lastIndex
+      date
+    }
+  }
+`;
 const Main = () => (
     <div>
-        <Query query={wordChaingql}>
+        <Query query={GET_WORD_CHAINS}>
             {({ loading, error, data }) => {
                 if (loading) return "Loading...";
                 if (error) return `Error! ${error.message}`;

@@ -9,6 +9,7 @@ import typeDefs from "./graphql/typeDefs";
 import resolvers from "./graphql/resolver";
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { createServer } from 'http';
+import path from 'path';
 const jwt = require('express-jwt')
 
 dotenv.config();
@@ -18,6 +19,8 @@ const db = process.env.MONGO_DB_URI;
 
 app.use(cors());
 app.use(bodyParser.json());
+
+app.options('*', cors());
 
 // auth middleware
 const auth = jwt({
@@ -40,7 +43,7 @@ const server = new ApolloServer({
     resolvers,
     subscriptions: {
         onConnect: (connectionParams,webSocket,context) => {
-            // console.log(webSocket)
+            console.log(webSocket)
             // return { user: ''};
         },
         onDisconnect: () => console.log('Disconnected Socket')
@@ -59,7 +62,10 @@ server.applyMiddleware({ app });
 
 const httpServer = createServer(app);
 server.installSubscriptionHandlers(httpServer);
-
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.get('/*', cors(), (req, res)=>{
+    res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+  });
 httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`)

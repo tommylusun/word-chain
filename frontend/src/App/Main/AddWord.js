@@ -1,12 +1,22 @@
 import React from 'react'
-import addWord from '../../GraphQL/addWord'
+// import addWord from '../../GraphQL/addWord'
 import { Mutation } from "react-apollo";
+import gql from "graphql-tag";
 
+const ADD_WORD = gql`
+  mutation addWord($chainId: ID!, $value: String!) {
+    addWord(id: $chainId, value: $value) {
+      words {
+          value
+      }
+    }
+  }
+`;
 const AddWord = (props) => {
 
     let input;
     return (
-        <Mutation mutation={addWord}>
+        <Mutation mutation={ADD_WORD}>
             {(addWord, { loading, error }) => {
                 if (error) {
                     console.log(error.message);
