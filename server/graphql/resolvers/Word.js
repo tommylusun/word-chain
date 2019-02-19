@@ -24,7 +24,7 @@ export default {
       return await Word.findOne(args).populate('WordChain').exec();
     },
     words: async (root, { }) => {
-      return await Word.find({}).populate().exec();
+      return await Word.find({value:'eel'}).exec();
     },
   },
   Mutation: {
@@ -59,8 +59,8 @@ const validateAndSaveWord = async (chainId, value, user) => {
   if (valid === -2) {
     throw new Error("Invalid: Not a real word!");
   }
-  else if (valid === -1) {
-    throw new Error("Invalid: You broke the rules!")
+  else if (valid !== 0) {
+    throw new Error(valid);
   }
 
   chain.lastLetter = value[value.length - 1];

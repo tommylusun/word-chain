@@ -43,13 +43,11 @@ const server = new ApolloServer({
     resolvers,
     subscriptions: {
         onConnect: (connectionParams,webSocket,context) => {
-            console.log(webSocket)
             // return { user: ''};
         },
         onDisconnect: () => console.log('Disconnected Socket')
     },
     context: ({ req, connection}) => {
-        console.log(connection);
         if (connection){
             return;
         }

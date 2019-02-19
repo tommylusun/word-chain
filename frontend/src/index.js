@@ -17,9 +17,11 @@ import { setContext } from 'apollo-link-context';
 require('dotenv').config();
 const httpLink = new HttpLink({
   uri: `/graphql`,
+  // uri: 'http://localhost:4000/graphql'
 });
 const wsLink = new WebSocketLink({
   uri: window.location.origin.replace('http','ws')+ '/graphql',
+  // uri: 'ws://localhost:4000/graphql',
   options: {
     reconnect: true
   }

@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import Main from '../Main/Main';
 import Login from '../Login/Login';
 import WordChainRoom from '../WordChainRoom/WordChainRoom'
+import Button from "../Common/Button";
 
 const AppRouter = (props) => {
     // Declare a new state variable, which we'll call "count"
@@ -17,21 +18,16 @@ const AppRouter = (props) => {
     });
 
     return (<BrowserRouter>
-        <div>
+        <div style={{ 'text-decoration': 'none', 'margin': '25px' }}>
+            <Link style={{ 'text-decoration': 'none', 'margin': '25px' }} to="/"><Button>Home</Button></Link>
             {!auth ?
-                <Link to="/login"><button>Login / Register</button></Link> :
-
-                (<div>
-                    <button onClick={() => {
-                        localStorage.removeItem('token');
-                        setLoggedIn(false);
-                    }}>Logout</button>
-                </div>
-                )
+                <Link style={{ 'text-decoration': 'none' }} to="/login"><Button>Login / Register</Button></Link>
+                :
+                <Button onClick={() => {
+                    localStorage.removeItem('token');
+                    setLoggedIn(false);
+                }}>Logout</Button>
             }
-            <nav>
-                <Link to="/">Home</Link>
-            </nav>
             <Switch>
                 <Route path="/" exact component={Main} />
                 <Route path="/login" exact component={Login} />

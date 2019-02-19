@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
-import { withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import Button from "../Common/Button";
+import TextField from '@material-ui/core/TextField';
 
 const LOGIN = gql`
   mutation loginUser($email: String!, $password: String!) {
@@ -45,7 +47,7 @@ class Login extends Component {
                     password: this.state.password
                 }
             });
-            localStorage.setItem('token',token.data.loginUser);
+            localStorage.setItem('token', token.data.loginUser);
         } else {
             token = await mutationCall({
                 variables: {
@@ -54,17 +56,17 @@ class Login extends Component {
                     password: this.state.password
                 }
             });
-            localStorage.setItem('token',token.data.registerUser);
+            localStorage.setItem('token', token.data.registerUser);
         }
-        window.dispatchEvent( new Event('storage') );
+        window.dispatchEvent(new Event('storage'));
         this.props.history.push('/');
     }
 
     render() {
         return (
-            <div>
+            <div style={{'margin':'auto','margin-top':'50px','border':'1px solid black','padding':'50px','width':'500px'}}>
                 <div>
-                    <button onClick={() => this.setState({ login: !this.state.login })} >{this.state.login ? 'register new account' : 'log in to your account'}</button>
+                    <Button onClick={() => this.setState({ login: !this.state.login })} >{this.state.login ? 'Register new account' : 'Log in to your account'}</Button>
 
                 </div>
                 {this.state.login ? (<h2>Login</h2>) : (<h2>New Account</h2>)}
@@ -72,32 +74,24 @@ class Login extends Component {
                     {(mutationCall, { loading, error, onComplete }) => (
                         <div>
                             <form onSubmit={(e) => this.handleSubmit(e, mutationCall)}>
-                                {
-                                    !this.state.login ?
-                                        <div>
-                                            <label htmlFor="username">Display Name:</label>
-                                            <input name="username" type="text" value={this.state.username} onChange={(e) => this.handleChange(e)} />
-                                        </div> : null
+                                {!this.state.login ?
+                                    <div>
+                                        <TextField margin="normal" variant="outlined" label="Display Name" name="username" type="text" value={this.state.username} onChange={(e) => this.handleChange(e)} />
+                                    </div> : null
                                 }
                                 <div>
-                                    <label htmlFor="email">Email:</label>
-                                    <input name="email" type="text" value={this.state.email} onChange={(e) => this.handleChange(e)} />
+                                    <TextField margin="normal" variant="outlined" label="Email" name="email" type="text" value={this.state.email} onChange={(e) => this.handleChange(e)} />
                                 </div>
                                 <div>
-                                    <label htmlFor="password">Password:</label>
-                                    <input name="password" type="password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
+                                    <TextField margin="normal" variant="outlined" label="Password" name="password" type="password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
                                 </div>
 
-                                <input type="submit" value="Submit" />
+                                <Button type="submit">Submit</Button>
                             </form>
                             {error && <p>Error: {error.message}</p>}
                         </div>
                     )}
                 </Mutation>
-
-
-
-
             </div>
         );
     }

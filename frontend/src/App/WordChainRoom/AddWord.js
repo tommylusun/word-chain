@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 // import addWord from '../../GraphQL/addWord'
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import Button from "../Common/Button";
+import TextField from '@material-ui/core/TextField';
 
 const ADD_WORD = gql`
   mutation addWord($chainId: ID!, $value: String!) {
@@ -13,8 +15,8 @@ const ADD_WORD = gql`
   }
 `;
 const AddWord = (props) => {
+    const [input, handleChange] = useState("");
 
-    let input;
     return (
         <Mutation mutation={ADD_WORD}>
             {(addWord, { loading, error }) => {
@@ -26,19 +28,19 @@ const AddWord = (props) => {
                         <form
                             onSubmit={e => {
                                 e.preventDefault();
-                                addWord({ variables: { chainId: props.chainId, value: input.value } });
-                                input.value = "";
+                                addWord({ variables: { chainId: props.chainId, value: input } });
+                                handleChange('');
                             }}
                         >
-                            <input
-                                ref={node => {
-                                    input = node;
-                                }}
+                            <TextField margin="normal" variant="outlined" label="New Word"
+                                type="text" value={input} onChange={(e) => handleChange(e.target.value)}
                             />
-                            <button type="submit">Add word</button>
+                            <div>
+                                <Button type="submit">Add word</Button>
+                            </div>
                         </form>
                         {error && <p>{error.message.replace("GraphQL error: ", "").trim()}</p>}
-                        {loading && <p>Checking...</p>}
+                        {loading ? <p style={{'min-height':'50px'}}>Checking...</p>:<p style={{'min-height':'50px'}}></p>}
                     </div>
                 )
             }}

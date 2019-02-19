@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-import AddWord from "../Main/AddWord";
+import AddWord from "./AddWord";
+import Button from "../Common/Button"
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 const GET_WORDCHAIN = gql`
-query WordChain($id: String!){
+query WordChain($id: String!, $limit: Int, $offset: Int){
     wordChain(id: $id){
         _id
         lastLetter
         lastIndex
         date
-        words{
+        words(limit: $limit, offset: $offset){
             value
             points
             user{
@@ -35,9 +38,12 @@ subscription WordAdded($chainId: String!){
   }
 `;
 class WordChainRoom extends Component {
-    state = { loggedIn: false };
+    state = {
+        loggedIn: false,
+        limit: 25,
+        offset: 0
+    };
     componentDidMount() {
-        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
         const token = localStorage.getItem('token');
         if (token) {
             this.setState({ loggedIn: true })
@@ -46,27 +52,52 @@ class WordChainRoom extends Component {
     render() {
         return (
             <div>
-                <Query query={GET_WORDCHAIN} variables={{ id: this.props.match.params.chainId }}>
-                    {({ loading, error, data, subscribeToMore }) => {
+                <Query query={GET_WORDCHAIN} variables={{
+                    id: this.props.match.params.chainId,
+                    limit: this.state.limit,
+                    offset: this.state.offset
+                }}>
+
+                    {({ loading, error, data, subscribeToMore, fetchMore }) => {
                         if (loading) return "Loading...";
                         if (error) return `Error! ${error.message}`;
                         const chain = data.wordChain;
                         const date = new Date(+data.wordChain.date);
                         return (
                             <div>
-                                <h3>{date.toDateString()}</h3>
-                                <WordList chain={chain} subscribeToMore={subscribeToMore}></WordList>
+                                <h2>{date.toDateString()}</h2>
+                                <p>Rules:</p>
+                                <p>Word's first letter must match last letter of the latest word</p>
+                                <p>Word must be longer than 2 letters</p>
+                                <p>Word cannot be used twice in one game</p>
                                 {this.state.loggedIn ? (<div>
                                     <AddWord chainId={this.props.match.params.chainId}></AddWord>
                                 </div>) :
                                     <div>Please log in if you want to play</div>}
+                                <WordList chain={chain} subscribeToMore={subscribeToMore}></WordList>
+                                {(chain.lastIndex > chain.words.length) ?
+                                    (<Button style={{ margin: '25px' }} onClick={() => {
+                                        fetchMore({
+                                            variables: {
+                                                offset: chain.words.length
+                                            },
+                                            updateQuery: (prev, { fetchMoreResult }) => {
+                                                if (!fetchMoreResult) return prev;
+                                                return Object.assign({}, prev, {
+                                                    wordChain: {
+                                                        ...fetchMoreResult.wordChain,
+                                                        words: [...prev.wordChain.words, ...fetchMoreResult.wordChain.words]
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }}>Show more</Button>) :
+                                    (<div style={{ margin: '25px' }}><b>End of list</b></div>)
+                                }
                             </div>
                         );
                     }}
                 </Query>
-                <div style={{ float: "left", clear: "both" }}
-                    ref={(el) => { this.messagesEnd = el; }}>
-                </div>
             </div>);
     }
 };
@@ -83,43 +114,42 @@ class WordList extends Component {
                 return Object.assign({}, prev.wordChain, {
                     wordChain: {
                         ...prev.wordChain,
-                        words: [...prev.wordChain.words, subscriptionData.data.wordAdded]
+                        words: [subscriptionData.data.wordAdded, ...prev.wordChain.words]
                     }
                 });
             }
         })
     }
     render() {
-        let users = {};
-        this.props.chain.words.map(word => {
-            if (users[word.user.username]) {
-                users[word.user.username] += word.points;
-            } else {
-                users[word.user.username] = word.points;
-            }
-        });
+        // let users = {};
+        // this.props.chain.words.map(word => {
+        //     if (users[word.user.username]) {
+        //         users[word.user.username] += word.points;
+        //     } else {
+        //         users[word.user.username] = word.points;
+        //     }
+        // });
         return (
             <div>
 
-                <div>
+                {/* <div>
                     Leaderboards:
                     <div>
                         {Object.keys(users).map(user => {
                             return (<div>{user} - {users[user]} points</div>);
                         })}
                     </div>
-                </div>
-                <div style={{ height: '50px' }}></div>
-                <div style={{borderTop: '1px solid black'}}>
+                </div> */}
+                <List style={{ borderTop: '1px solid black' }}>
                     {this.props.chain.words.map((word, index) => {
-                        if (this.props.chain.words.length-1 === index){
-                            return (<div><b>Latest word:</b> {word.value}</div>)
+                        if (index === 0) {
+                            return (<List key={index}><b>Latest word: </b> {word.value}</List>)
                         }
                         return (
-                            <div>{word.value} </div>
+                            <List key={index}>{word.value} </List>
                         )
                     })}
-                </div>
+                </List>
 
 
             </div>

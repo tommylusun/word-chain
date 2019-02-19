@@ -17,7 +17,9 @@ query{
   }
 `;
 const Main = () => (
-    <div>
+    <div style={{'margin':'auto','margin-top':'50px','border':'1px solid black','padding':'50px','width':'500px'}}>
+        <h1>Word Chain</h1>
+        <p></p>
         <Query query={GET_WORD_CHAINS}>
             {({ loading, error, data }) => {
                 if (loading) return "Loading...";

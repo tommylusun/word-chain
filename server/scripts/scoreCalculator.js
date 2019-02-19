@@ -33,7 +33,7 @@ const calculatePoints = async (word, chain) => {
         multiplier = 2;
     }
 
-    return points*multiplier;
+    return Math.floor(points*multiplier);
 };
 
 export default calculatePoints;    

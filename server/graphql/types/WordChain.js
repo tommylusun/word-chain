@@ -5,7 +5,7 @@ export default gql`
     _id: ID
     lastIndex: Int!
     lastLetter: String
-    words: [Word]!
+    words(limit: Int, offset: Int): [Word]!
     date: String!
   }
   type Query {
