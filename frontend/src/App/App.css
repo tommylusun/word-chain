@@ -1,7 +1,20 @@
 .App {
   text-align: center;
+  background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  font-family: Roboto;
+  font-weight: 100;
 }
-
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition-delay: 9999s;
+}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;

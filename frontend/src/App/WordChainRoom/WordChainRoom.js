@@ -65,7 +65,7 @@ class WordChainRoom extends Component {
                         const date = new Date(+data.wordChain.date);
                         return (
                             <div>
-                                <h2>{date.toDateString()}</h2>
+                                <div style={{ padding: '15px', 'font-size': '2em' }}>{date.toDateString()}</div>
                                 <p>Rules:</p>
                                 <p>Word's first letter must match last letter of the latest word</p>
                                 <p>Word must be longer than 2 letters</p>
@@ -73,7 +73,7 @@ class WordChainRoom extends Component {
                                 {this.state.loggedIn ? (<div>
                                     <AddWord chainId={this.props.match.params.chainId}></AddWord>
                                 </div>) :
-                                    <div>Please log in if you want to play</div>}
+                                    <div style={{ padding: '15px' }}>Please log in if you want to play</div>}
                                 <WordList chain={chain} subscribeToMore={subscribeToMore}></WordList>
                                 {(chain.lastIndex > chain.words.length) ?
                                     (<Button style={{ margin: '25px' }} onClick={() => {
@@ -143,10 +143,14 @@ class WordList extends Component {
                 <List style={{ borderTop: '1px solid black' }}>
                     {this.props.chain.words.map((word, index) => {
                         if (index === 0) {
-                            return (<List key={index}><b>Latest word: </b> {word.value}</List>)
+                            return (
+                                <List style={{ 'font-size': '2em' }} key={index}>
+                                    <b style={{ 'font-size': '1.3rem'}}> Latest word -> </b>
+                                    {word.value}
+                                </List>)
                         }
                         return (
-                            <List key={index}>{word.value} </List>
+                            <List style={{ 'font-size': '1.5em' }} key={index}>{word.value} </List>
                         )
                     })}
                 </List>

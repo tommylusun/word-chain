@@ -15,13 +15,17 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 
 require('dotenv').config();
+let httpURI = '/graphql';
+let wsURI = window.location.origin.replace('http','ws') + '/graphql';
+if (process.env.NODE_ENV==='development'){
+  httpURI = 'http://localhost:4000/graphql';
+  wsURI = 'ws://localhost:4000/graphql';
+}
 const httpLink = new HttpLink({
-  uri: `/graphql`,
-  // uri: 'http://localhost:4000/graphql'
+  uri: httpURI
 });
 const wsLink = new WebSocketLink({
-  uri: window.location.origin.replace('http','ws')+ '/graphql',
-  // uri: 'ws://localhost:4000/graphql',
+  uri: wsURI,
   options: {
     reconnect: true
   }

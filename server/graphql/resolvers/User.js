@@ -22,11 +22,20 @@ export default {
   },
   Mutation: {
     registerUser: async (root, { username, email, password }) => {
+
       const newUser = new User({ 
         username, 
         email, 
         password: await bcrypt.hash(password, 10)
       });
+      let checkUser = await User.find({ username: username});
+      if (checkUser.length > 0) {
+        throw new Error("Name already taken");
+      }
+      checkUser = await User.find({ email: email});
+      if (checkUser.length > 0) {
+        throw new Error("Account with this email already exist");
+      }
       const user = await newUser.save();
 
       // return json web token
