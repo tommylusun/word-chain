@@ -40,7 +40,7 @@ export default {
 
       // return json web token
       return jsonwebtoken.sign(
-        { id: user._id, email: user.email },
+        { id: user._id, email: user.email, username: user.username },
         process.env.JWT_SECRET,
         { expiresIn: '1y' }
       );
@@ -56,7 +56,7 @@ export default {
         throw new Error('Incorrect password')
       }
       return jsonwebtoken.sign(
-        { id: user.id, email: user.email },
+        { id: user.id, email: user.email, username: user.username },
         process.env.JWT_SECRET,
         { expiresIn: '1y' }
       );

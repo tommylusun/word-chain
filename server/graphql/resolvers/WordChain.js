@@ -18,10 +18,9 @@ export default {
       return await WordChain.find({}).populate().exec();
     },
     wordChain: async (root, { id }) => {
-      const chain = await WordChain.findOne({_id: id}).exec();
+      const chain = await WordChain.findOne({_id: id}).sort({'leaderboard.score':-1}).exec();
       return chain;
     }
-    
   },
   Mutation: {
     createNewChain: async () => {

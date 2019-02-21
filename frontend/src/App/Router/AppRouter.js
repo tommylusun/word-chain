@@ -18,10 +18,10 @@ const AppRouter = (props) => {
     });
 
     return (<BrowserRouter>
-        <div style={{ 'text-decoration': 'none', 'margin': '25px' }}>
-            <Link style={{ 'text-decoration': 'none', 'margin': '25px' }} to="/"><Button>Home</Button></Link>
+        <div style={{ textDecoration: 'none', 'margin': '25px' }}>
+            <Link style={{ textDecoration: 'none', 'margin': '25px' }} to="/"><Button>Home</Button></Link>
             {!auth ?
-                <Link style={{ 'text-decoration': 'none' }} to="/login"><Button>Login / Register</Button></Link>
+                <Link style={{ textDecoration: 'none' }} to="/login"><Button>Login / Register</Button></Link>
                 :
                 <Button onClick={() => {
                     localStorage.removeItem('token');
@@ -31,7 +31,7 @@ const AppRouter = (props) => {
             <Switch>
                 <Route path="/" exact component={Main} />
                 <Route path="/login" exact component={Login} />
-                <Route path="/chain/:chainId" exact component={props => (<WordChainRoom {...props} />)} />
+                <Route path="/chain/:chainId" exact render={props => (<WordChainRoom {...props} />)} />
             </Switch>
         </div>
     </BrowserRouter>);

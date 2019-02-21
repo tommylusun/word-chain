@@ -17,6 +17,10 @@ export default gql`
     addWord(chainId: ID!, value: String!): WordChain
   }
   type Subscription {
-    wordAdded(wordChainId: String!): Word
+    wordAdded(wordChainId: String!): SubPayLoad
+  }
+  type SubPayLoad {
+    word: Word
+    leaderboard: [LeaderBoardEntry]
   }
 `;

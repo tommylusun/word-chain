@@ -19,6 +19,10 @@ const WordChainSchema = new Schema({
   words: [{
     type: Schema.Types.ObjectId,
     ref: 'Word'
+  }],
+  leaderboard: [{
+    username: String,
+    score: Number
   }]
 });
 

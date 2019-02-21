@@ -40,12 +40,12 @@ export default {
   Subscription: {
     wordAdded: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator('WORD_ADDED'),
+        () => pubsub.asyncIterator(WORD_ADDED),
         (payload, variables) => {
-
-          if (payload.wordAdded.wordChain.toString() === variables.wordChainId) {
+          if (payload.wordAdded.word.wordChain.toString() === variables.wordChainId) {
+            console.log(payload);
           }
-          return payload.wordAdded.wordChain.toString() === variables.wordChainId;
+          return payload.wordAdded.word.wordChain.toString() === variables.wordChainId;
         },
       )
     }
@@ -78,6 +78,19 @@ const validateAndSaveWord = async (chainId, value, user) => {
   if (!newChain) {
     throw new Error("Too slow! Someone else got it!");
   }
+  const leaderboardLength = chain.leaderboard.length;
+  let found = false;
+  for (let i = 0 ; i < leaderboardLength; i ++){
+    if (chain.leaderboard[i].username === user.username){
+      chain.leaderboard[i].score += points;
+      found = true;
+      break;
+    }
+  }
+  if (!found){
+    chain.leaderboard.push({username: user.username, score: points});
+  }
+
 
   const currentUser = await User.findById(user.id);
   const savedWord = await word.save();
@@ -85,6 +98,7 @@ const validateAndSaveWord = async (chainId, value, user) => {
   await currentUser.words.push(savedWord._id);
   await chain.save();
   await currentUser.save();
-  await pubsub.publish(WORD_ADDED, { wordAdded: savedWord });
+  const sub = await pubsub.publish(WORD_ADDED, { wordAdded: {word: savedWord, leaderboard: chain.leaderboard }});
+  console.log(sub)
   return chain;
 };

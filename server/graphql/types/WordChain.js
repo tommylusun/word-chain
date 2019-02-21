@@ -7,6 +7,11 @@ export default gql`
     lastLetter: String
     words(limit: Int, offset: Int): [Word]!
     date: String!
+    leaderboard: [LeaderBoardEntry]
+  }
+  type LeaderBoardEntry {
+    username: String!
+    score: Int!
   }
   type Query {
     wordChain(id: String): WordChain

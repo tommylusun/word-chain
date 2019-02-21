@@ -40,7 +40,7 @@ const AddWord = (props) => {
                             </div>
                         </form>
                         {error && <p>{error.message.replace("GraphQL error: ", "").trim()}</p>}
-                        {loading ? <p style={{'min-height':'50px'}}>Checking...</p>:<p style={{'min-height':'50px'}}></p>}
+                        {loading ? <p style={{minHeight:'50px'}}>Checking...</p>:<p style={{minHeight:'50px'}}></p>}
                     </div>
                 )
             }}

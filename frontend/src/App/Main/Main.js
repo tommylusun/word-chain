@@ -5,6 +5,7 @@ import gql from "graphql-tag";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { Query } from "react-apollo";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const GET_WORD_CHAINS = gql`
 
@@ -24,7 +25,7 @@ const Main = () => (
             <p></p>
             <Query query={GET_WORD_CHAINS}>
                 {({ loading, error, data }) => {
-                    if (loading) return "Loading...";
+                    if (loading) return (<LinearProgress style={{margin: '50px'}} />);
                     if (error) return `Error! ${error.message}`;
 
                     return (
@@ -32,9 +33,9 @@ const Main = () => (
                             {data.wordChains.map(chain => {
                                 return (
                                     <Link style={{textDecoration:'none'}} to={"/chain/" + chain._id}>
-                                        <Card style={{'background':'#ffffff55'}}>
+                                        <Card style={{'background':'#ffffff55','margin':'20px'}}>
                                             <CardContent>
-                                                <div style={{ padding:'15px','font-size': '1.2em'}}>{new Date(+chain.date).toDateString()}</div>
+                                                <div style={{ padding:'10px','font-size': '1.5em'}}>{new Date(+chain.date).toDateString()}</div>
                                             </CardContent>
                                         </Card>
                                     </Link>
