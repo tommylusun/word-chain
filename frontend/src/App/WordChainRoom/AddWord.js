@@ -20,9 +20,6 @@ const AddWord = (props) => {
     return (
         <Mutation mutation={ADD_WORD}>
             {(addWord, { loading, error }) => {
-                if (error) {
-                    console.log(error.message);
-                }
                 return (
                     <div>
                         <form

@@ -28,7 +28,6 @@ class Login extends Component {
         shrink: false
     };
     componentDidMount() {
-        console.log(this.state)
     }
 
     async handleChange(event) {
