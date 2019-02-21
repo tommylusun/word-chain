@@ -16,12 +16,14 @@ const validateWord = async (word, chain) => {
         return rulesValid;
     }
     if (await verifyRealWord(word) !== 0) {
-        return -2;
+        return -1;
     }
     return 0;
 };
 
 const validateChainRules = async (word, chain) => {
+
+    
 
 
     if (chain.lastLetter !== '' && chain.lastLetter !== word[0]) {

@@ -54,8 +54,12 @@ export default {
 const validateAndSaveWord = async (chainId, value, user) => {
   const chain = await WordChain.findById(chainId).populate('words').exec();
 
+  value  = value.trim();
+  if (!value.match(/^[a-zA-Z]+$/)){
+    throw new Error("Invalid: Must only contain English letters!");
+  }
   const valid = await validateWord(value, chain);
-  if (valid === -2) {
+  if (valid === -1) {
     throw new Error("Invalid: Not a real word!");
   }
   else if (valid !== 0) {
