@@ -23,8 +23,8 @@ export default {
     word: async (root, args) => {
       return await Word.findOne(args).populate('WordChain').exec();
     },
-    words: async (root, { }) => {
-      return await Word.find({value:'eel'}).exec();
+    words: async (root, args) => {
+      return await Word.find(args).exec();
     },
   },
   Mutation: {
@@ -43,7 +43,6 @@ export default {
         () => pubsub.asyncIterator(WORD_ADDED),
         (payload, variables) => {
           if (payload.wordAdded.word.wordChain.toString() === variables.wordChainId) {
-            console.log(payload);
           }
           return payload.wordAdded.word.wordChain.toString() === variables.wordChainId;
         },
@@ -80,17 +79,16 @@ const validateAndSaveWord = async (chainId, value, user) => {
   }
   const leaderboardLength = chain.leaderboard.length;
   let found = false;
-  for (let i = 0 ; i < leaderboardLength; i ++){
-    if (chain.leaderboard[i].username === user.username){
+  for (let i = 0; i < leaderboardLength; i++) {
+    if (chain.leaderboard[i].username === user.username) {
       chain.leaderboard[i].score += points;
       found = true;
       break;
     }
   }
-  if (!found){
-    chain.leaderboard.push({username: user.username, score: points});
+  if (!found) {
+    chain.leaderboard.push({ username: user.username, score: points });
   }
-
 
   const currentUser = await User.findById(user.id);
   const savedWord = await word.save();
@@ -98,7 +96,6 @@ const validateAndSaveWord = async (chainId, value, user) => {
   await currentUser.words.push(savedWord._id);
   await chain.save();
   await currentUser.save();
-  const sub = await pubsub.publish(WORD_ADDED, { wordAdded: {word: savedWord, leaderboard: chain.leaderboard }});
-  console.log(sub)
+  const sub = await pubsub.publish(WORD_ADDED, { wordAdded: { word: savedWord, leaderboard: chain.leaderboard } });
   return chain;
 };

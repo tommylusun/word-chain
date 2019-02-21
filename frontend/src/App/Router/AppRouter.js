@@ -28,6 +28,7 @@ const AppRouter = (props) => {
                     setLoggedIn(false);
                 }}>Logout</Button>
             }
+            <Button style={{ textDecoration: 'none', 'margin': '25px' }}><a href='https://github.com/tommylusun/word-chain'>Github</a></Button>
             <Switch>
                 <Route path="/" exact component={Main} />
                 <Route path="/login" exact component={Login} />

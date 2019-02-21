@@ -42,18 +42,18 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     subscriptions: {
-        onConnect: (connectionParams,webSocket,context) => {
-            // return { user: ''};
+        onConnect: (connectionParams, webSocket, context) => {
+            console.log('User connected')
         },
-        onDisconnect: () => console.log('Disconnected Socket')
+        onDisconnect: () => console.log('User disconnected')
     },
-    context: ({ req, connection}) => {
-        if (connection){
+    context: ({ req, connection }) => {
+        if (connection) {
             return;
         }
         // get the user token from the headers
-        return req.user ? {user: req.user} : {user: ''};
-      }
+        return req.user ? { user: req.user } : { user: '' };
+    }
 });
 
 server.applyMiddleware({ app });
@@ -61,9 +61,9 @@ server.applyMiddleware({ app });
 const httpServer = createServer(app);
 server.installSubscriptionHandlers(httpServer);
 app.use(express.static(path.join(__dirname, '../frontend/build')));
-app.get('/*', cors(), (req, res)=>{
+app.get('/*', cors(), (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
-  });
+});
 httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`)

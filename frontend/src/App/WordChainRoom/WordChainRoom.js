@@ -138,15 +138,17 @@ class WordList extends Component {
         })
     }
     render() {
+        this.props.chain.leaderboard.sort((a,b) => (b.score-a.score));
         return (
             <div>
-                <div style={{ position: 'absolute', margin: '25px' }}>
+                <div style={{ position: 'absolute', margin: '25px','textAlign':'start' }}>
                     <div style={{ fontSize: '1.5em' }}>Leaderboard:</div>
                     <div>
                         {this.props.chain.leaderboard.map((user, index) => {
                             return (
-                                <div>
-                                    <Chip avatar={<Avatar style={{'backgroundColor':'transparent'}}>{index + 1}</Avatar>}
+                                <div >
+                                    <Chip 
+                                        avatar={<Avatar style={{'backgroundColor':'transparent'}}>{index + 1}</Avatar>}
                                         variant="outlined"
                                         label={`${user.username} : ${user.score} points`} />
                                 </div>);
@@ -158,15 +160,21 @@ class WordList extends Component {
                         if (index === 0) {
                             return (
                                 <div style={{ fontSize: '2em' }} key={index}>
-                                    <Chip style={{ fontSize: '1rem', margin: '20px' }}
+                                    <Chip style={{ fontSize: '1rem', margin: '20px',minWidth:'150px' }}
                                         label="Latest word"
                                         variant="outlined"
                                     />
-                                    {word.value}
+                                    <span style={{ 'display':'inline-block', minWidth:'150px'}}>{word.value}</span>
                                 </div>)
                         }
                         return (
-                            <div style={{ fontSize: '1.5em' }} key={index}>{word.value} </div>
+                            <div style={{ fontSize: '1.3em' }} key={index}>
+                            <Chip style={{ margin: '5px', minWidth:'150px'}}
+                                        label={word.user.username}
+                                        variant="outlined"
+                                    />
+                            <span style={{ 'display':'inline-block', minWidth:'150px'}}>{word.value}</span>
+                            </div>
                         )
                     })}
                 </List>
