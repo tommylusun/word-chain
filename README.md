@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them
 
 ```
-NodeJs
+Node.JS
 ```
 
 ### Run client and server with hot reload
@@ -58,12 +58,12 @@ npm start
 
 ## Built With
 
-* [React 16.8] - Latest React version, using their latest Hooks mechanism
-* [GraphQL]- Data query language for APIs
-* [Apollo Server and Client] - GraphQL Tooling and Framework
-* [Express] - Node web framework
-* [Mongoose]- Popular object data modeling library for Mongo
-* [MongoDB]- Popular NoSQL DB
+* [React 16.8](https://reactjs.org/) - Latest React version, using their latest Hooks mechanism
+* [GraphQL](https://graphql.org/)- Data query language for APIs
+* [Apollo Server and Client](https://www.apollographql.com/) - GraphQL Tooling and Framework
+* [Express](https://expressjs.com/) - Node web framework
+* [Mongoose](https://mongoosejs.com/) - Popular object data modeling library for Mongo
+* [MongoDB](https://www.mongodb.com/) - Popular NoSQL DB
 
 
 ## License
